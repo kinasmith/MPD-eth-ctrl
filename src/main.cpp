@@ -1,16 +1,3 @@
-#include <Arduino.h>
-
-void setup() {
-  pinMode(7, OUTPUT);
-}
-
-void loop() {
-  digitalWrite(7,HIGH);
-  delay(1000/6);
-  digitalWrite(7, LOW);
-  delay(1000/6);
-}
-
 /*
 Arduino Ethernet Script Server
 
@@ -64,57 +51,79 @@ Example: A5 -> 42
 */
 
 // Include files.
+#include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
 
 // Enter a MAC address for your controller below, usually found on a sticker
 // on the back of your Ethernet shield.
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0E, 0xD0, 0x93 };
+byte mac[] = { 0x89, 0xF0, 0x4F, 0xB0, 0x2C, 0x65 };
 
 // The IP address will be dependent on your local network.
 // If you have IP network info, uncomment the lines starting
 // with IPAddress and enter relevant data for your network.
 // If you don't know, you probably have dynamically allocated IP adresses, then
 // you don't need to do anything, move along.
-// IPAddress ip(192,168,1, 177);
-// IPAddress gateway(192,168,1, 1);
-// IPAddress subnet(255, 255, 255, 0);
+IPAddress ip(192,168,1,55);
+// IPAddress gateway(192,168,1,1);
+// IPAddress subnet(255, 255, 255,0);
 
 // Create a server listening on the given port.
 EthernetServer server(3300);
 
+void printServerStatus();
+void sendResponse(EthernetClient*, String);
+int readParam(String*);
+char readCommand(String*);
+void executeRequest(EthernetClient*, String*);
+String readRequest(EthernetClient*);
+
+
 void setup()
 {
+	Ethernet.init(10);  // Most Arduino shields
+
 	// Start serial communication with the given baud rate.
 	// NOTE: Remember to set the baud rate in the Serial
 	// monitor to the same value.
 	Serial.begin(9600);
-
 	// Wait for serial port to connect. Needed for Leonardo only.
-	while (!Serial) { ; }
-
+	// while (!Serial) { ; }
+	Serial.println("begin!@");
 	// Initialize the Ethernet shield.
 	// If you entered fixed ipaddress info, gateway, subnet mask,
 	// then uncommment the next line.
 	// Ethernet.begin(mac, ip, gateway, subnet);
+	Ethernet.begin(mac, ip);
 
+	// Check for Ethernet hardware present
+	if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+		Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
+		while (true) {
+		delay(1); // do nothing, no point running without Ethernet hardware
+		}
+	}
+	if (Ethernet.linkStatus() == LinkOFF) {
+		Serial.println("Ethernet cable is not connected.");
+	}
 	// If it works to get a dynamic IP from a DHCP server, use this
 	// code to test if you're getting a dynamic adress. If this
 	// does not work, use the above method of specifying an IP-address.
 	// dhcp test starts here
-	if (Ethernet.begin(mac) == 0)
-	{
-		Serial.println("Failed to configure Ethernet using DHCP");
-		// No point in carrying on, stop here forever.
-		while(true) ;
-	}
-	// dhcp test end
+	// if (Ethernet.begin(mac) == 0)
+	// {
+	// 	Serial.println("Failed to configure Ethernet using DHCP");
+	// 	// No point in carrying on, stop here forever.
+	// 	while(true) ;
+	// }
 
 	// Start the server.
 	server.begin();
 
 	// Print status.
-	printServerStatus();
+	Serial.print("Server address:");
+	Serial.println(Ethernet.localIP());
+	pinMode(7, OUTPUT);
 }
 
 void loop()
@@ -229,3 +238,5 @@ void printServerStatus()
 	Serial.print("Server address:");
 	Serial.println(Ethernet.localIP());
 }
+
+
