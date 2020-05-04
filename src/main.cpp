@@ -1,242 +1,83 @@
-/*
-Arduino Ethernet Script Server
+/**
+ * Port: 1616
+ * IP Address: 192.168.0.140
+ * Input: 2 char Hex String converted to Binary
+ * Pin Outputs: 2,3,4,5, 6,7,8,9
+ * Also can do A0-A5 for an additional 6 outputs (make these Plated Thru Holes on PCB for additional Expansion possibilities)
+ */
 
-Created Mars 4, 2014
-Mikael Kindborg, Evothings AB
-
-TCP socket server that accept commands for basic scripting
-of the Arduino board.
-
-This example is written for use with an Ethernet shield.
-
-The API consists of the requests listed below.
-
-Requests and responses end with a new line.
-
-The input parameter n is a pin number ranging from 2 to 9.
-
-The response is always a 4-character string with a
-hex encoded number ranging from 0 to FFFF.
-
-Possible response string values:
-
-H (result from digital read)
-L (result from digital read)
-0 to 1023 - Analog value (result from analog read)
-
-Set pin mode to OUTPUT for pin n: On
-Response: None
-Example: O5
-Note: O is upper case letter o, not digit zero (0).
-
-Set pin mode to INPUT for pin n: In
-Response: None
-Example: I5
-
-Write LOW to pin n: Ln
-Response: None
-Example: L5
-
-Write HIGH to pin n: Hn
-Response: None
-Example: H5
-
-READ pin n: Rn
-Response: "H" (HIGH) or "L" (LOW)
-Example: R5 -> H
-
-ANALOG read pin n: An
-Response: int value as string (range "0" to "1023")
-Example: A5 -> 42
-*/
-
-// Include files.
 #include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
 
-// Enter a MAC address for your controller below, usually found on a sticker
-// on the back of your Ethernet shield.
+#define BUF_SIZE 8
+
 byte mac[] = { 0x89, 0xF0, 0x4F, 0xB0, 0x2C, 0x65 };
-
-// The IP address will be dependent on your local network.
-// If you have IP network info, uncomment the lines starting
-// with IPAddress and enter relevant data for your network.
-// If you don't know, you probably have dynamically allocated IP adresses, then
-// you don't need to do anything, move along.
 IPAddress ip(192,168,1,55);
-// IPAddress gateway(192,168,1,1);
-// IPAddress subnet(255, 255, 255,0);
+EthernetServer server(1616);
 
-// Create a server listening on the given port.
-EthernetServer server(3300);
 
-void printServerStatus();
-void sendResponse(EthernetClient*, String);
-int readParam(String*);
-char readCommand(String*);
-void executeRequest(EthernetClient*, String*);
+
 String readRequest(EthernetClient*);
+void executeRequest(EthernetClient*, String*);
 
-
-void setup()
-{
-	Ethernet.init(10);  // Most Arduino shields
-
-	// Start serial communication with the given baud rate.
-	// NOTE: Remember to set the baud rate in the Serial
-	// monitor to the same value.
+void setup(){
+	Ethernet.init(10);
 	Serial.begin(9600);
-	// Wait for serial port to connect. Needed for Leonardo only.
-	// while (!Serial) { ; }
-	Serial.println("begin!@");
-	// Initialize the Ethernet shield.
-	// If you entered fixed ipaddress info, gateway, subnet mask,
-	// then uncommment the next line.
-	// Ethernet.begin(mac, ip, gateway, subnet);
+	// while(!Serial) {}d
+	Serial.println("begin");
 	Ethernet.begin(mac, ip);
-
-	// Check for Ethernet hardware present
 	if (Ethernet.hardwareStatus() == EthernetNoHardware) {
 		Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
 		while (true) {
-		delay(1); // do nothing, no point running without Ethernet hardware
+		delay(1); 
 		}
 	}
-	if (Ethernet.linkStatus() == LinkOFF) {
+	if (Ethernet.linkStatus() == LinkOFF){
 		Serial.println("Ethernet cable is not connected.");
 	}
-	// If it works to get a dynamic IP from a DHCP server, use this
-	// code to test if you're getting a dynamic adress. If this
-	// does not work, use the above method of specifying an IP-address.
-	// dhcp test starts here
-	// if (Ethernet.begin(mac) == 0)
-	// {
-	// 	Serial.println("Failed to configure Ethernet using DHCP");
-	// 	// No point in carrying on, stop here forever.
-	// 	while(true) ;
-	// }
-
-	// Start the server.
 	server.begin();
-
-	// Print status.
 	Serial.print("Server address:");
 	Serial.println(Ethernet.localIP());
-	pinMode(7, OUTPUT);
+	for(int i = 2; i <= 9; i++) { //intialize output pins
+		pinMode(i, OUTPUT);
+		// Serial.println(i);
+	}
 }
 
-void loop()
-{
-	// Listen for incoming client requests.
+void loop(){
+
 	EthernetClient client = server.available();
-	if (!client)
-	{
+	if (!client){
 		return;
 	}
-
 	Serial.println("Client connected");
-
-	String request = readRequest(&client);
+	String request = readRequest(&client); //gets Serial string
+	Serial.println(request); //prints that Serial String out
 	executeRequest(&client, &request);
-
-	// Close the connection.
-	//client.stop();
 
 	Serial.println("Client disonnected");
 }
 
-// Read the request line,
-String readRequest(EthernetClient* client)
-{
+String readRequest(EthernetClient* client){
 	String request = "";
-
-	// Loop while the client is connected.
-	while (client->connected())
-	{
-		// Read available bytes.
-		while (client->available())
-		{
-			// Read a byte.
+	while (client->connected()){
+		while (client->available()){
 			char c = client->read();
-
-			// Print the value (for debugging).
-			Serial.write(c);
-
-			// Exit loop if end of line.
-			if ('\n' == c)
-			{
+			// Serial.write(c); //prints recieved characters
+			if ('\n' == c){
 				return request;
 			}
-
-			// Add byte to request line.
 			request += c;
 		}
 	}
 	return request;
 }
-
-void executeRequest(EthernetClient* client, String* request)
-{
-	char command = readCommand(request);
-	int n = readParam(request);
-	if ('O' == command)
-	{
-		pinMode(n, OUTPUT);
-	}
-	else if ('I' == command)
-	{
-		pinMode(n, INPUT);
-	}
-	else if ('L' == command)
-	{
-		digitalWrite(n, LOW);
-	}
-	else if ('H' == command)
-	{
-		digitalWrite(n, HIGH);
-	}
-	else if ('R' == command)
-	{
-		sendResponse(client, String(digitalRead(n)));
-	}
-	else if ('A' == command)
-	{
-		sendResponse(client, String(analogRead(n)));
+void executeRequest(EthernetClient* client, String* request){
+	for(int i = 0; i < BUF_SIZE; i++) {
+		int pinState = request->charAt(i);
+		int pinNum = (BUF_SIZE-i)+1;
+		if(pinState == '1') digitalWrite(pinNum, HIGH);
+		else if(pinState == '0') digitalWrite(pinNum, LOW);
 	}
 }
-
-// Read the command from the request string.
-char readCommand(String* request)
-{
-	String commandString = request->substring(0, 1);
-	return commandString.charAt(0);
-}
-
-// Read the parameter from the request string.
-int readParam(String* request)
-{
-	// This handles a hex digit 0 to F (0 to 15).
-	char buffer[2];
-	buffer[0] = request->charAt(1);
-	buffer[1] = 0;
-	return (int) strtol(buffer, NULL, 16);
-}
-
-void sendResponse(EthernetClient* client, String response)
-{
-	// Send response to client.
-	client->println(response);
-
-	// Debug print.
-	Serial.println("sendResponse:");
-	Serial.println(response);
-}
-
-void printServerStatus()
-{
-	Serial.print("Server address:");
-	Serial.println(Ethernet.localIP());
-}
-
-
