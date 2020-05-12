@@ -1,0 +1,22 @@
+Removed Member From Class: ClassName=ardu-shield Member=D?
+Change Component Comment : Designator=D3 Old Comment=LED Yellow New Comment=LED
+Added Component: Designator=D2(APA3010)
+Added Pin To Net: NetName=NetD1_A Pin=D1-A
+Added Pin To Net: NetName=GND Pin=D1-K
+Added Pin To Net: NetName=GND Pin=D2-1
+Added Pin To Net: NetName=NetD?_A Pin=D2-2
+Added Pin To Net: NetName=NetD4_A Pin=D4-A
+Added Pin To Net: NetName=GND Pin=D4-K
+Added Pin To Net: NetName=NetD5_A Pin=D5-A
+Added Pin To Net: NetName=GND Pin=D5-K
+Added Pin To Net: NetName=NetD6_A Pin=D6-A
+Added Pin To Net: NetName=GND Pin=D6-K
+Added Pin To Net: NetName=NetD7_A Pin=D7-A
+Added Pin To Net: NetName=GND Pin=D7-K
+Added Pin To Net: NetName=NetD8_A Pin=D8-A
+Added Pin To Net: NetName=GND Pin=D8-K
+Added Pin To Net: NetName=NetD9_A Pin=D9-A
+Added Pin To Net: NetName=GND Pin=D9-K
+Change Net Name : Old Net Name=NetD3_A New Net Name=NetD3_2
+Change Net Name : Old Net Name=NetD?_A New Net Name=NetD2_2
+Added Member To Class: ClassName=ardu-shield Member=Component D2 LED
