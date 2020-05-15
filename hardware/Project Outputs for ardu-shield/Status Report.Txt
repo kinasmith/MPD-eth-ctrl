@@ -1,12 +1,31 @@
-Output: NC Drill Files
-Type  : NC Drill
-From  : PCB Document [ardu-shield.PcbDoc]
-   Generated File[ardu-shield.TXT]
-   Generated File[ardu-shield.LDP]
-   Generated File[ardu-shield.DRR]
+Project Outputs Generation Report
+---------------------------------
+Start Output Generation At 6:33:05 AM On 5/15/2020
+
+Output: ODB++ Files
+Type  : ODB
+From  : Variant [[No Variations]] of PCB Document [ardu-shield.PcbDoc]
+   Generated File[matrix]
+   Generated File[profile]
+   Generated File[stephdr]
+   Generated File[features]
+   Generated File[features]
+   Generated File[features]
+   Generated File[features]
+   Generated File[features]
+   Generated File[features]
+   Generated File[tools]
+   Generated File[features]
+   Generated File[features]
+   Generated File[components]
+   Generated File[features]
+   Generated File[components]
+   Generated File[data]
+   Generated File[netlist]
+   Generated File[ardu-shield.REP]
 
 
-Files Generated   : 3
+Files Generated   : 18
 Documents Printed : 0
 
-Finished Output Generation At 4:45:27 PM On 5/14/2020
+Finished Output Generation At 6:33:06 AM On 5/15/2020

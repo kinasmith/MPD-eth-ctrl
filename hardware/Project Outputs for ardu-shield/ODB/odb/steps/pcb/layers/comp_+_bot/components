@@ -1,0 +1,50 @@
+#
+#Component attribute names
+#
+@0 .comp_mount_type
+@1 .comp_height
+
+# CMP 0
+CMP 9 1.8 2 180 N J6 Uno_Digital_1 ;0=2,1=0.3740
+TOP 0 1.8 2 0 N 3 2 J6-1
+TOP 1 1.9 2 0 N 4 2 J6-2
+TOP 2 2 2 0 N 5 1 J6-3
+TOP 3 2.1 2 0 N 6 1 J6-4
+TOP 4 2.2 2 0 N 7 2 J6-5
+TOP 5 2.3 2 0 N 26 0 J6-6
+TOP 6 2.4 2 0 N 0 11 J6-7
+TOP 7 2.5 2 0 N 0 10 J6-8
+#
+# CMP 1
+CMP 8 2 0.1 180 N J4 Uno_Analog ;0=2,1=0.3740
+TOP 0 2 0.1 0 N 14 1 J4-1
+TOP 1 2.1 0.1 0 N 13 1 J4-2
+TOP 2 2.2 0.1 0 N 12 1 J4-3
+TOP 3 2.3 0.1 0 N 11 1 J4-4
+TOP 4 2.4 0.1 0 N 10 1 J4-5
+TOP 5 2.5 0.1 0 N 9 1 J4-6
+#
+# CMP 2
+CMP 7 0.74 2 180 N J2 Uno_Digital_2 ;0=2,1=0.3740
+TOP 0 0.74 2 0 N 0 7 J2-1
+TOP 1 0.84 2 0 N 0 6 J2-2
+TOP 2 0.94 2 0 N 0 5 J2-3
+TOP 3 1.04 2 0 N 25 39 J2-4
+TOP 4 1.14 2 0 N 0 4 J2-5
+TOP 5 1.24 2 0 N 0 3 J2-6
+TOP 6 1.34 2 0 N 0 9 J2-7
+TOP 7 1.44 2 0 N 0 8 J2-8
+TOP 8 1.54 2 0 N 1 0 J2-9
+TOP 9 1.64 2 0 N 2 1 J2-10
+#
+# CMP 3
+CMP 9 1.1 0.1 180 N J1 Uno_Power ;0=2,1=0.3740
+TOP 0 1.1 0.1 0 N 0 0 J1-1
+TOP 1 1.2 0.1 0 N 0 1 J1-2
+TOP 2 1.3 0.1 0 N 8 0 J1-3
+TOP 3 1.4 0.1 0 N 0 2 J1-4
+TOP 4 1.5 0.1 0 N 30 0 J1-5
+TOP 5 1.6 0.1 0 N 25 52 J1-6
+TOP 6 1.7 0.1 0 N 25 53 J1-7
+TOP 7 1.8 0.1 0 N 29 0 J1-8
+#
