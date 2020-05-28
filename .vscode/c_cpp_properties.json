@@ -1,0 +1,65 @@
+{
+    "configurations": [
+        {
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/include",
+                "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/src",
+                "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/.pio/libdeps/leonardo/Ethernet_ID872/src",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/variants/leonardo",
+                "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/.pio/libdeps/leonardo/Adafruit NeoPixel_ID28",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                "/home/kbjs/.platformio/packages/tool-unity",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/include",
+                    "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/src",
+                    "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/.pio/libdeps/leonardo/Ethernet_ID872/src",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/variants/leonardo",
+                    "/home/kbjs/Project/UCAR/MPD-eth-ctrlr/.pio/libdeps/leonardo/Adafruit NeoPixel_ID28",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/home/kbjs/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    "/home/kbjs/.platformio/packages/tool-unity",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=40303",
+                "ARDUINO_AVR_LEONARDO",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "USB_VID=0x2341",
+                "USB_PID=0x8036",
+                "USB_PRODUCT=\"Arduino Leonardo\"",
+                "USB_MANUFACTURER=\"Arduino\"",
+                "__AVR_ATmega32U4__",
+                ""
+            ],
+            "intelliSenseMode": "clang-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "/home/kbjs/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerArgs": [
+                "-mmcu=atmega32u4",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
