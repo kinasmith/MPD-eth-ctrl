@@ -1,21 +1,36 @@
 #include <SPI.h>
 #include <Ethernet.h>
+#include <EEPROM.h>
 
 #define BUF_SIZE 8
 
 //mac address of device
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 1, 58); //IP Address of device
+// byte mac[] = {
+//   0xA8, 
+//   0x61, 
+//   0x0A, 
+//   0xAE, 
+//   0x76, 
+//   0x0F 
+//   };
+byte mac[6] = { 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x00 };
+char macstr[18];
 
-EthernetServer server(1616); //TCP Port for device
+IPAddress ip(192, 168, 0, 140); //IP Address of device
+int port = 1616;
+EthernetServer server(port); //TCP Port for device
 boolean alreadyConnected = false;
 
 //status led
 int status_led_pin = 13;
 bool status_led_state = false;
 
+
+
 void setup() {
+    // generalte/read MAC Address
+    handleMACaddr();
+
     //intialize output pins
     for (int i = 2; i <= 9; i++) { 
 		pinMode(i, OUTPUT);
@@ -23,7 +38,14 @@ void setup() {
     pinMode(status_led_pin, OUTPUT);
     Ethernet.init(10); //initialized Ethernet Shield
     Ethernet.begin(mac, ip); 
-    Serial.begin(9600); //start debug serieal
+    Serial.begin(9600); //start debug serial
+    ///delay startup for 5 seconds to allow for serial monitor opening before status prints
+    for(int i = 0; i < 5; i++) {
+        digitalWrite(status_led_pin, HIGH);
+        delay(500);
+        digitalWrite(status_led_pin, LOW);
+        delay(500);
+    }
     // while (!Serial) {
     //     ;
     // }
@@ -48,9 +70,13 @@ void setup() {
 	} else digitalWrite(status_led_pin, LOW);
 
     server.begin(); //start TCP Server
-    //debug print IP Address
-    Serial.print("Server address:");
-    Serial.println(Ethernet.localIP());
+    //debug print IP Address, Port, and MAC
+	Serial.print("IP address:");
+	Serial.print(Ethernet.localIP());
+	Serial.print(" Port:");
+    Serial.print(port);
+    Serial.print(" Mac Addr:");	
+	Serial.println(macstr);
 }
 
 void loop() {
@@ -129,4 +155,24 @@ void sendResponse(EthernetClient* client, String response)
 	// Debug print.
 	// Serial.print("sendResponse:");
 	// Serial.println(response);
+}
+/**
+ * Generates and stores MAC Address on first run.
+ * Retrieves that address from EEPROM if it exists.
+ */
+void handleMACaddr() {
+  // Random MAC address stored in EEPROM
+  if (EEPROM.read(1) == '#') {
+    for (int i = 2; i < 6; i++) {
+      mac[i] = EEPROM.read(i);
+    }
+  } else {
+    randomSeed(analogRead(0));
+    for (int i = 2; i < 6; i++) {
+      mac[i] = random(0, 255);
+      EEPROM.write(i, mac[i]);
+    }
+    EEPROM.write(1, '#');
+  }
+  snprintf(macstr, 18, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }

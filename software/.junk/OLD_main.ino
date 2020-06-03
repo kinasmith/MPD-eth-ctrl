@@ -9,10 +9,14 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
+#include <EEPROM.h>
 
 #define BUF_SIZE 8
 
-byte mac[] = { 0x89, 0xF0, 0x4F, 0xB0, 0x2C, 0x65 };
+// byte mac[] = { 0x89, 0xF0, 0x4F, 0xB0, 0x2C, 0x65 };
+byte mac[6] = { 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x00 };
+char macstr[18];
+
 IPAddress ip(192,168,1,55);
 EthernetServer server(1616);
 int eth_led = 2;
@@ -20,6 +24,7 @@ bool eth_led_state = false;
 
 String readRequest(EthernetClient*);
 void executeRequest(EthernetClient*, String*);
+void handleMACaddr();
 
 /**
  *  set led on when Ethernet Initilized. If not init, blink all @ rate
@@ -28,6 +33,7 @@ void executeRequest(EthernetClient*, String*);
  */
 
 void setup(){
+	handleMACaddr();
 	for (int i = 2; i <= 9; i++) { //intialize output pins
 		pinMode(i, OUTPUT);
 	}
@@ -66,8 +72,10 @@ void setup(){
 		Serial.println("Ethernet cable is not connected.");
 	} else digitalWrite(eth_led, LOW);
 	server.begin();
-	Serial.print("Server address:");
-	Serial.println(Ethernet.localIP());
+	Serial.print("IP address:");
+	Serial.print(Ethernet.localIP());
+	Serial.print(" Port:1616 Mac Addr:");	
+	Serial.println(macstr);
 }
 
 void loop(){
@@ -104,4 +112,21 @@ void executeRequest(EthernetClient* client, String* request){
 		if(pinState == '1') digitalWrite(pinNum, HIGH);
 		else if(pinState == '0') digitalWrite(pinNum, LOW);
 	}
+}
+
+void handleMACaddr() {
+  // Random MAC address stored in EEPROM
+  if (EEPROM.read(1) == '#') {
+    for (int i = 2; i < 6; i++) {
+      mac[i] = EEPROM.read(i);
+    }
+  } else {
+    randomSeed(analogRead(0));
+    for (int i = 2; i < 6; i++) {
+      mac[i] = random(0, 255);
+      EEPROM.write(i, mac[i]);
+    }
+    EEPROM.write(1, '#');
+  }
+  snprintf(macstr, 18, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }
