@@ -38,10 +38,17 @@ void setup() {
     pinMode(status_led_pin, OUTPUT);
     Ethernet.init(10); //initialized Ethernet Shield
     Ethernet.begin(mac, ip); 
-    Serial.begin(9600); //start debug serieal
-    while (!Serial) {
-        ;
+    Serial.begin(9600); //start debug serial
+    ///delay startup for 5 seconds to allow for serial monitor opening before status prints
+    for(int i = 0; i < 5; i++) {
+        digitalWrite(status_led_pin, HIGH);
+        delay(500);
+        digitalWrite(status_led_pin, LOW);
+        delay(500);
     }
+    // while (!Serial) {
+    //     ;
+    // }
     /**
      * If the Shield is missing, blink LED forever
      */
